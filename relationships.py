@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.16.5"
+__generated_with = "0.17.0"
 app = marimo.App(width="medium")
 
 
@@ -65,7 +65,6 @@ def _(df):
 def _(df):
     y = df["Plant_Health_Status"]
     y.unique()
-
     return (y,)
 
 
@@ -79,7 +78,6 @@ def _(mo):
 def _(features, sns):
 
     matrix = sns.heatmap(features.corr(),annot=True,fmt=".2f")
-
     return (matrix,)
 
 
@@ -126,10 +124,12 @@ def _(line, mo):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""
+    mo.md(
+        r"""
     # Visualize Samples
     visualize with T-SNE and PCA to consider the non-linearity of the manifold
-    """)
+    """
+    )
     return
 
 
@@ -150,7 +150,6 @@ def _(PCA, StandardScaler, TSNE, make_pipeline, s):
 @app.cell
 def _(features, pca):
     pcs = pca.fit_transform(features)
-
     return (pcs,)
 
 
@@ -183,11 +182,13 @@ def _(labelled_ts, plt, sns):
 
 @app.cell
 def _(mo, pca_plot, tsne_plot):
-    mo.md(f"""
-        We visualize our features with both PCA and T-SNE to see how our features related to our class labels.  We see below that our classes do not seem to be easily seperated with linear or non-linear methods.  Possibly due to our many uninformative features.
+    mo.md(
+        f"""
+    We visualize our features with both PCA and T-SNE to see how our features related to our class labels.  We see below that our classes do not seem to be easily seperated with linear or non-linear methods.  Possibly due to our many uninformative features.
 
-        <center> {mo.as_html(pca_plot)} {mo.as_html(tsne_plot)} </center>
-    """)
+    <center> {mo.as_html(pca_plot)} {mo.as_html(tsne_plot)} </center>
+    """
+    )
     return
 
 
