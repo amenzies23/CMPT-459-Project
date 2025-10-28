@@ -46,7 +46,7 @@ def _(X, y):
     for id in ids:
         mi = mutual_info_classif(x.drop(columns="Timestamp"),y.loc[X['Plant_ID'] == id])
         plant_mi[f'Plant_{id}'] = pd.Series(data=mi, index=x.drop(columns="Timestamp").columns)
-    
+
     plant_mi
     return fig_cors, plant_mi
 
