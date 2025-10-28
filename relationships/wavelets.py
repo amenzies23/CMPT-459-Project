@@ -1,7 +1,7 @@
 import marimo
 
 __generated_with = "0.16.5"
-app = marimo.App(width="medium")
+app = marimo.App(width="medium", auto_download=["ipynb"])
 
 with app.setup:
     # Initialization code that runs before all other cells
@@ -115,6 +115,14 @@ def _(X, levels):
     return (w,)
 
 
+@app.cell
+def _(w):
+    ax = sns.clustermap(w.resample("D").mean().T, method='average', metric='euclidean', cmap='viridis', standard_scale=1,row_cluster=True,col_cluster=False,cbar_pos=(1.05, 0.5, 0.03, 0.4))
+    ax.fig.suptitle("Correlation of Wavelet Features",y = 0.9)
+    plt.show()
+    return
+
+
 @app.cell(hide_code=True)
 def _():
     mo.md(
@@ -166,25 +174,27 @@ def _(coi, window_size):
 def _(low, view_plant, window_size):
     sns.lineplot(low,dashes=False)
     plt.xticks(rotation = 45)
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', borderaxespad=0,frameon=False)
     plt.title(f"Feature Approximation Wavelets\n (Moving Average Window = {window_size.value}, Plant = {view_plant.value})")
     return
 
 
 @app.cell
-def _(coi, level2view):
+def _(coi, level2view, view_plant):
     plt.figure(figsize=(8,8))
     sns.heatmap(coi.corr(),annot = True, fmt=".2f")
-    plt.title(f"Correlation of features for Level {level2view.value}")
+    plt.title(f"Correlation of features for Plant:{view_plant.value} Level {level2view.value}")
     return
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
-    mo.md(f"""
+    mo.md(
+        f"""
     # Reduce Dimensionality
     use PCA and T-SNE to visualize the relationships between each example for the given level
-    """)
+    """
+    )
     return
 
 
@@ -196,6 +206,8 @@ def _(coi, df):
     pcs['y'] = df['Plant_Health_Status']
     tss = pd.DataFrame(tsne.fit_transform(coi), index=coi.index, columns=['T1', 'T2'])
     tss['y'] = df['Plant_Health_Status']
+    tss['Plant ID'] = df['Plant_ID']
+    tss
     return pcs, tss
 
 
@@ -205,16 +217,21 @@ def _():
 
 
 @app.cell
-def _(level2view, pcs):
-    sns.scatterplot(pcs,x = 'PC1', y = 'PC2',hue='y')
-    plt.title(f"PCA Plot of Features for Level {level2view.value}")
+def _(level2view, pcs, view_plant):
+    sns.scatterplot(pcs,x = 'PC1', y = 'PC2',hue='y',palette=['#A10702','#EF8354','#84994F'])
+    plt.title(f"PCA Plot of Features for Plant:{view_plant.value} Level {level2view.value}")
     return
 
 
 @app.cell
-def _(level2view, tss):
-    sns.scatterplot(tss,x='T1',y='T2',hue='y')
-    plt.title(f"TSNE Plot of Features for Level {level2view.value}")
+def _(level2view, tss, view_plant):
+    sns.scatterplot(tss,x='T1',y='T2',hue='y')#,palette=['#A10702','#EF8354','#84994F'])
+    plt.title(f"TSNE Plot of Features for Plant:{view_plant.value} Level {level2view.value}")
+    return
+
+
+@app.cell
+def _():
     return
 
 
