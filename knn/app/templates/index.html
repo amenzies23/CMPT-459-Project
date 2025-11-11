@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Plant Health Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f2f7fa;
+        }
+
+        .slider-container {
+            margin-bottom: 20px;
+        }
+
+        .slider-label {
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Plant Health Predictor</h2>
+    <p>Adjust the sensor readings below to predict plant health.</p>
+
+    <div id="sliders"></div>
+    <div id="result"></div>
+
+    <script>
+        const features = {{ features | tojson }};
+        const ranges = {{ ranges | tojson }};
+        const slidersDiv = document.getElementById("sliders");
+
+        // Create sliders using true min/max ranges
+        features.forEach(f => {
+            const container = document.createElement("div");
+            container.classList.add("slider-container");
+
+            const label = document.createElement("label");
+            label.classList.add("slider-label");
+            label.textContent = `${f} (${ranges[f].min.toFixed(2)} - ${ranges[f].max.toFixed(2)})`;
+
+            const input = document.createElement("input");
+            input.type = "range";
+            input.min = ranges[f].min;
+            input.max = ranges[f].max;
+            input.value = (ranges[f].min + ranges[f].max) / 2;
+            input.step = (ranges[f].max - ranges[f].min) / 200;  // smooth range
+            input.id = f;
+            input.style.width = "300px";
+
+            const valueDisplay = document.createElement("span");
+            valueDisplay.textContent = Number(input.value).toFixed(2);
+
+            input.oninput = () => {
+                valueDisplay.textContent = Number(input.value).toFixed(2);
+                livePredict();
+            };
+
+            container.appendChild(label);
+            container.appendChild(document.createElement("br"));
+            container.appendChild(input);
+            container.appendChild(document.createTextNode(" "));
+            container.appendChild(valueDisplay);
+
+            slidersDiv.appendChild(container);
+        });
+
+        async function livePredict() {
+            const data = {};
+            features.forEach(f => {
+                data[f] = parseFloat(document.getElementById(f).value);
+            });
+
+            const res = await fetch("/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await res.json();
+            document.getElementById("result").textContent =
+                "Predicted Health Status: " + result.Predicted_Health_Status;
+        }
+    </script>
+</body>
+
+</html>
