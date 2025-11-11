@@ -1,0 +1,7 @@
+README.md
+setup.py
+src/plant_health_analysis.egg-info/PKG-INFO
+src/plant_health_analysis.egg-info/SOURCES.txt
+src/plant_health_analysis.egg-info/dependency_links.txt
+src/plant_health_analysis.egg-info/requires.txt
+src/plant_health_analysis.egg-info/top_level.txt

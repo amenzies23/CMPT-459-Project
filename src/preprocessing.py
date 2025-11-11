@@ -8,6 +8,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+import pywt as pwt
 '''
     Get Class Labels from Dataset (y)
 '''
@@ -28,10 +29,38 @@ def normalize(df):
     scaled = scaler.fit_transform(df)
     return pd.DataFrame(data=scaled,index=df.index, columns=df.columns)
 
+
+def wavelet(col, level = 3, method = 'db2'):
+    '''
+        Compute Stationary Wavelets for A Given Column
+        Params: 
+        * col: pd.Series column to perform DWT on
+        * level: int number of resolution to look at
+        * method: str method to use
+    '''
+    waves = pwt.swt(col, wavelet = method, level = level)
+    cols = pd.DataFrame(index=col.index)
+    for l in range(level):
+        cols[f'{col.name}_a_{l}'] = waves[l][0]
+        cols[f'{col.name}_d_{l}'] = waves[l][0]
+    return cols
+
+
+def wavelet_features(df, levels = 3, method = 'db2'):
+    '''
+        Applies wavelet function column wise.  Output is axpanded into a larger dataframe
+        * Pandas Dataframe with all numeric columns
+        * level: int number of resolution to look at
+        * method: str method to use
+    '''
+    wave_dfs = [wavelet(df[col],level=levels, method=method) for col in df.columns]
+    return pd.concat(wave_dfs, axis=1)
+
+
 '''
     Extract Informative features for Model
 '''
-def extract_features(df, attr:list):
+def extract_features(df, attr:list = []):
     assert len(attr) > 0
     return df.loc[:, attr]
 

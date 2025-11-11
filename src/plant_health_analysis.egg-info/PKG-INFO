@@ -1,0 +1,36 @@
+Metadata-Version: 2.2
+Name: plant_health_analysis
+Version: 0.1.0
+Summary: Our CMPT-459 Project Source code
+Author: Still Trainig
+Author-email: your.email@example.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: marimo
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: description
+Dynamic: description-content-type
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+# CMPT-459-Project
+
+# Installation
+TODO: Revise as we work on the project.
+```
+pip install -r {name}_requirements.txt
+```
+
+TODO: Dataset, Preprocessing, Feature Extraction, Classifcation, etc..
+...
