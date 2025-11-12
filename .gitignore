@@ -1,5 +1,6 @@
 *data*
 *venv*
+*.pyc
 .DS_Store
 
 # KNN
@@ -223,4 +224,3 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
-

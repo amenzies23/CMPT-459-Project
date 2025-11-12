@@ -1,5 +1,6 @@
 # CMPT-459-Project
 
+<<<<<<< HEAD
 # Installation
 
 ## Create and activate a virtual environment
@@ -13,10 +14,19 @@ For KNN Classification
 pip instal -r aki_requirements.txt
 ```
 
+=======
+# Layout
+>>>>>>> main
 ```
-pip install -r {name}_requirements.txt
+├── data
+├── eda
+├── README.md
+├── requirements.txt
+├── setup.py
+├── src
 ```
 
+<<<<<<< HEAD
 ### K-Nearest Neighbour (KNN) Classifier
 Make sure you are in the correct directory:
 ```bash
@@ -80,3 +90,35 @@ To retrain the model with hyperparameter tuning and start the Flask app immediat
 TODO: Revise as we work on the project.
 TODO: Dataset, Preprocessing, Feature Extraction, Classifcation, etc..
 ...
+=======
+# Installation
+We designed our Project as a python package. All our training 
+and pre-processing code is in the ```src/``` directory.
+To install the project and get running. Run 
+
+```
+pip install -e .
+```
+
+# Basic Usage
+In any python file you can now use
+```python
+from preprocessing import preprocess
+import pandas as pd
+df = pd.read_csv("data/plant_healt_data.csv")
+model_ready = preprocess(df)
+print(model_ready.head())
+```
+
+# Dataset
+* link to project proposal
+
+# Preprocessing
+* What we do
+* Why
+
+# Feature Extraction
+* Wavelet Transform
+
+# Models
+>>>>>>> main
