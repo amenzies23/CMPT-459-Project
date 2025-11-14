@@ -4,11 +4,20 @@
 #   ./run.sh                            Train with hyperparameter tuning
 #   ./run.sh --no-hyperparameter-tuning Train without hyperparameter tuning
 
-# Environment Setup
-# Check if virtual environment is active (optional reminder)
+# Virtual Environment
+# Auto-activate venv if not active
 if [ -z "$VIRTUAL_ENV" ]; then
-    echo -e "\033[1;33m[Warning]\033[0m No virtual environment detected."
-    echo "It's recommended to run this inside a virtualenv."
+    if [ -d "../venv" ]; then
+        echo -e "\033[1;32m[Info]\033[0m Activating virtual environment..."
+        source ../venv/bin/activate
+        if [ $? -ne 0 ]; then
+            echo -e "\033[1;31m[Error]\033[0m Failed to activate venv."
+            exit 1
+        fi
+    else
+        echo -e "\033[1;33m[Warning]\033[0m No virtual environment detected and no ./venv directory found."
+        echo "Continuing without virtualenv..."
+    fi
 fi
 
 # Train Model
