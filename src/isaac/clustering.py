@@ -6,7 +6,8 @@ app = marimo.App(width="columns")
 with app.setup:
     # Initialization code that runs before all other cells
     import marimo as mo
-    from preprocessing import preprocess, wavelet_features, get_labels
+    from preprocessing import preprocess, get_labels
+    from extraction import feature_extraction
     from sklearn.decomposition import PCA
     from sklearn.metrics import silhouette_score
     from scipy.cluster import hierarchy as h
@@ -49,10 +50,7 @@ def _():
 
 @app.cell
 def _(cleaned):
-    pca = PCA(n_components=10)
-    extracted = wavelet_features(cleaned)
-    features = pca.fit_transform(extracted)
-    X = pd.DataFrame(data=features, index=cleaned.index,columns=[f"PC{i}" for i in range(10)])
+    X = feature_extraction(cleaned,components=10)
     X
     return (X,)
 
@@ -62,6 +60,7 @@ def _(X, df):
     points = X.copy()
     points['y'] = get_labels(df)
     sns.scatterplot(points, x='PC0',y='PC1', hue= 'y')
+    plt.legend(bbox_to_anchor = (0.95,1.1), ncols = 4,frameon = False)
     return (points,)
 
 
