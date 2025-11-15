@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.17.0"
+__generated_with = "0.17.8"
 app = marimo.App(width="medium")
 
 
@@ -32,7 +32,9 @@ def _():
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Read Dataset""")
+    mo.md(r"""
+    # Read Dataset
+    """)
     return
 
 
@@ -45,7 +47,9 @@ def _(pd):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Extract Feature Columns""")
+    mo.md(r"""
+    # Extract Feature Columns
+    """)
     return
 
 
@@ -70,7 +74,9 @@ def _(df):
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Plot Feature Correlations""")
+    mo.md(r"""
+    # Plot Feature Correlations
+    """)
     return
 
 
@@ -83,13 +89,17 @@ def _(features, sns):
 
 @app.cell
 def _(matrix, mo):
-    mo.md(f"""<center>{mo.as_html(matrix)}</center>""")
+    mo.md(f"""
+    <center>{mo.as_html(matrix)}</center>
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(r"""# Information Between Features and Classes""")
+    mo.md(r"""
+    # Information Between Features and Classes
+    """)
     return
 
 
@@ -113,23 +123,19 @@ def _(mi, plt):
 
 @app.cell
 def _(line, mo):
-    mo.md(
-        f"""
+    mo.md(f"""
     <center>{mo.as_html(line)}</center>
     We see that temperature seems to have little to do with plant stress. However, soil moisture, PH, and Nitrogen are better predictors.  By far soil moisture is the strongest predictor.  Suggesting to hobby gardeners that good results can come just from making sure their plants are watered.  However, for more dedicated gardeners purchasing light intensity, PH and Nitrogen sensors seem to be best for monitoring plant stress.
-    """
-    )
+    """)
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
-    mo.md(
-        r"""
+    mo.md(r"""
     # Visualize Samples
     visualize with T-SNE and PCA to consider the non-linearity of the manifold
-    """
-    )
+    """)
     return
 
 
@@ -182,13 +188,11 @@ def _(labelled_ts, plt, sns):
 
 @app.cell
 def _(mo, pca_plot, tsne_plot):
-    mo.md(
-        f"""
+    mo.md(f"""
     We visualize our features with both PCA and T-SNE to see how our features related to our class labels.  We see below that our classes do not seem to be easily seperated with linear or non-linear methods.  Possibly due to our many uninformative features.
 
     <center> {mo.as_html(pca_plot)} {mo.as_html(tsne_plot)} </center>
-    """
-    )
+    """)
     return
 
 
