@@ -13,13 +13,16 @@ import pywt as pwt
     Get Class Labels from Dataset (y)
 '''
 def get_labels(df):
-    return df.loc[:,["Plant_Health_Status"]]
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+    return df.set_index('Timestamp').loc[:,["Plant_Health_Status"]]
 
 '''
     Get All Features from the dataset (X)
 '''
 def get_features(df):
-    return df.drop(columns = ["Timestamp", "Plant_ID","Plant_Health_Status"])
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+    df = df.set_index("Timestamp")
+    return df.drop(columns = [ "Plant_ID","Plant_Health_Status"])
 
 '''
     Normalize all features for preparing for model
@@ -61,7 +64,7 @@ def wavelet_features(df, levels = 3, method = 'db2'):
     Extract Informative features for Model
 '''
 def extract_features(df, attr:list = []):
-    assert len(attr) > 0
+    if len(attr) == 0: return df
     return df.loc[:, attr]
 
 '''
