@@ -4,104 +4,194 @@
 <head>
     <meta charset="UTF-8">
     <title>Plant Health Predictor</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #f2f7fa;
-        }
-
-        .slider-container {
-            margin-bottom: 20px;
-        }
-
-        .slider-label {
-            font-weight: bold;
-        }
-
-        button {
-            padding: 10px 20px;
-            background: #4CAF50;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        #result {
-            margin-top: 30px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
-    <h2>Plant Health Predictor</h2>
-    <p>Adjust the sensor readings below to predict plant health.</p>
+<body class="bg-blue-50 font-sans p-10">
+    <h2 class="text-3xl font-bold mb-6">Plant Health Predictor</h2>
 
-    <div id="sliders"></div>
-    <div id="result"></div>
+    <div class="flex items-center mb-6 space-x-3">
+        <span class="text-xl font-semibold">Predicted Health Status:</span>
+        <span id="healthStatus" class="px-4 py-2 rounded-full font-semibold text-white bg-gray-400 transition-colors">
+            --
+        </span>
+        <div id="loadingSpinner" class="w-6 h-6 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin hidden"></div>
+    </div>
+
+    <h3 class="text-xl font-semibold mb-2">Select Plant</h3>
+    <div id="plantButtons" class="flex flex-wrap gap-2 mb-6"></div>
+
+    <h2 class="text-2xl font-bold mb-4">Daily Sensor Cycle (Cubic Interpolation)</h2>
+    <div class="bg-white p-4 rounded-lg shadow-md">
+        <canvas id="cycleChart" width="800" height="300"></canvas>
+    </div>
 
     <script>
+        function debounce(fn, delay = 100) {
+            let timer = null;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn(...args), delay);
+            };
+        }
+
+        const debouncedHoverPredict = debounce(async function (dataPoint) {
+            try {
+                const res = await fetch("/predict", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dataPoint)
+                });
+
+                const result = await res.json();
+                const statusEl = document.getElementById("healthStatus");
+
+                // Reset styling first
+                statusEl.className = "px-4 py-2 rounded-full font-semibold text-white transition-colors";
+
+                // Set color based on predicted status
+                switch (result.Predicted_Health_Status.toLowerCase()) {
+                    case "healthy":
+                        statusEl.classList.add("bg-green-500");
+                        break;
+                    case "moderate stress":
+                        statusEl.classList.add("bg-yellow-500");
+                        break;
+                    case "high stress":
+                        statusEl.classList.add("bg-red-500");
+                        break;
+                    default:
+                        statusEl.classList.add("bg-gray-400");
+                }
+
+                statusEl.textContent = result.Predicted_Health_Status;
+            } finally {
+                hideSpinner();
+            }
+        }, 200);
+
         const features = {{ features | tojson }};
-        const ranges = {{ ranges | tojson }};
-        const slidersDiv = document.getElementById("sliders");
+        const plantSelect = document.getElementById("plantSelect");
 
-        // Create sliders using true min/max ranges
-        features.forEach(f => {
-            const container = document.createElement("div");
-            container.classList.add("slider-container");
+        const plantColors = [
+            "bg-red-500", "bg-green-500", "bg-blue-500", "bg-yellow-500",
+            "bg-purple-500", "bg-pink-500", "bg-indigo-500", "bg-orange-500",
+            "bg-emerald-500", "bg-sky-500"
+        ];
 
-            const label = document.createElement("label");
-            label.classList.add("slider-label");
-            label.textContent = `${f} (${ranges[f].min.toFixed(2)} - ${ranges[f].max.toFixed(2)})`;
+        async function loadPlantIDs() {
+            const res = await fetch("/plant_ids");
+            const ids = await res.json();
 
-            const input = document.createElement("input");
-            input.type = "range";
-            input.min = ranges[f].min;
-            input.max = ranges[f].max;
-            input.value = (ranges[f].min + ranges[f].max) / 2;
-            input.step = (ranges[f].max - ranges[f].min) / 200;  // smooth range
-            input.id = f;
-            input.style.width = "300px";
+            const container = document.getElementById("plantButtons");
+            container.innerHTML = "";
 
-            const valueDisplay = document.createElement("span");
-            valueDisplay.textContent = Number(input.value).toFixed(2);
+            ids.forEach((id, index) => {
+                const btn = document.createElement("button");
+                btn.textContent = "Plant " + id;
 
-            input.oninput = () => {
-                valueDisplay.textContent = Number(input.value).toFixed(2);
-                livePredict();
+                // Full rounded, colored
+                const colorClass = plantColors[index % plantColors.length];
+                btn.className = `px-5 py-2 rounded-full text-white font-semibold transition-transform transform hover:scale-105 ${colorClass}`;
+
+                btn.onclick = () => {
+                    // Highlight selected: add ring around selected
+                    document.querySelectorAll("#plantButtons button").forEach(b => b.classList.remove("ring-4", "ring-gray-900"));
+                    btn.classList.add("ring-4", "ring-gray-900");
+
+                    loadDayCycle(id);
+                };
+                container.appendChild(btn);
+            });
+
+            // Automatically select the first plant
+            if (ids.length > 0) {
+                container.firstChild.click();
+            }
+        }
+
+        loadPlantIDs();
+
+        let chart = null;
+
+        async function loadDayCycle(plantId) {
+            if (!plantId)
+                return;
+
+            // Reset the predicted status
+            const statusEl = document.getElementById("healthStatus");
+            statusEl.textContent = "--";
+            statusEl.className = "px-4 py-2 rounded-full font-semibold text-white bg-gray-400 transition-colors";
+
+            showSpinner();
+
+            const res = await fetch(`/day_cycle/${plantId}`);
+            const data = await res.json();
+            const hours = data.Hour;
+
+            const datasets = Object.keys(data)
+                .filter(col => col !== "Hour" && data[col])
+                .map(col => ({
+                    label: col,
+                    data: data[col].map((v, i) => ({ x: hours[i], y: v })),
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.3, // smooth curves
+                }));
+
+            const canvas = document.getElementById("cycleChart");
+
+            if (chart) {
+                // Update chart data and animate
+                chart.data.datasets = datasets;
+                chart.update({
+                    duration: 1000, // animate for 1 second
+                    easing: 'easeOutQuart'
+                });
+            } else {
+                // First creation
+                chart = new Chart(canvas, {
+                    type: "line",
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        interaction: { mode: "index", intersect: false },
+                        scales: {
+                            x: { type: "linear", title: { display: true, text: "Hour" } },
+                            y: { title: { display: true, text: "Sensor Value" } }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+            }
+
+            chart.options.onHover = (event, elements) => {
+                if (!elements.length)
+                    return;
+
+                const idx = elements[0].index;
+                const featureData = {};
+                datasets.forEach(ds => {
+                    featureData[ds.label] = ds.data[idx].y;
+                });
+
+                showSpinner();
+                debouncedHoverPredict(featureData);
             };
 
-            container.appendChild(label);
-            container.appendChild(document.createElement("br"));
-            container.appendChild(input);
-            container.appendChild(document.createTextNode(" "));
-            container.appendChild(valueDisplay);
+            hideSpinner();
+        }
 
-            slidersDiv.appendChild(container);
-        });
+        function showSpinner() {
+            document.getElementById("loadingSpinner").classList.remove("hidden");
+        }
 
-        async function livePredict() {
-            const data = {};
-            features.forEach(f => {
-                data[f] = parseFloat(document.getElementById(f).value);
-            });
-
-            const res = await fetch("/predict", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data)
-            });
-
-            const result = await res.json();
-            document.getElementById("result").textContent =
-                "Predicted Health Status: " + result.Predicted_Health_Status;
+        function hideSpinner() {
+            document.getElementById("loadingSpinner").classList.add("hidden");
         }
     </script>
 </body>
