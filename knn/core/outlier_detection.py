@@ -12,7 +12,9 @@ def remove_outliers(
 ) -> Tuple[np.ndarray, np.ndarray]:
     # Using LOF Outlier Detection
     lof = LocalOutlierFactor(n_neighbors=10, contamination=contamination)
-    outlier_labels = lof.fit_predict(X_scaled) # -1 = outlier, 1 = inlier
+    
+    # -1 = outlier, 1 = inlier
+    outlier_labels = lof.fit_predict(X_scaled)
 
     # Build mask for non-outlier (inliers)
     mask = outlier_labels != -1
