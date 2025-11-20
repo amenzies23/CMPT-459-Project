@@ -10,7 +10,16 @@ def find_best_dbscan_params(
     eps_values,
     min_samples_values
 ):
-    """Grid search for best DBSCAN params using silhouette score."""
+    """
+    Search over eps and min_samples to find the best DBSCAN configuration 
+    using silhouette score as the evaluation metric.
+    
+    - Iterates through all param combinations
+    - Skips invalid runs (clusters < 2)
+    - Tracks and prints silhouette scores
+    - Generates a scatter plot of parameter performance
+    - Returns: (best_eps, best_min_samples), best_score
+    """
     best_score = -1
     best_params = None
 
@@ -60,6 +69,13 @@ def perform_clustering(
     eps_values=np.linspace(0.3, 2.5, 15),
     min_samples_values=range(3, 20)
 ):
+    """
+    - Perform grid search to find best eps and min_samples.
+    - Run DBSCAN using the best parameters (or fallback defaults).
+    - Report number of clusters and silhouette score.
+    - Visualize by reducing data to 2D with PCA.
+    - Plot clusters (noise: label = -1).
+    """
     best_params, best_score = find_best_dbscan_params(
         X_selected, eps_values, min_samples_values
     )
@@ -97,7 +113,11 @@ def perform_clustering(
 
 def plot_dbscan_param_scatter(results, out_path="./plots/dbscan_param_scatter.png"):
     """
-    returns (eps, min_samples, n_clusters, silhouette_score_or_None)
+    Scatter plot showing how DBSCAN parameters (eps, min_samples)
+    affect clustering quality. Used to visually inspect good parameter regions
+
+    - Each point: one (eps, min_samples) combination
+    - Color: silhouette score (or gray if invalid)
     """
     eps = [result[0] for result in results]
     min_samples = [result[1] for result in results]
@@ -129,5 +149,8 @@ def plot_dbscan_param_scatter(results, out_path="./plots/dbscan_param_scatter.pn
     plt.show()
 
 def count_clusters(labels):
-    """Return number of clusters ignoring noise."""
+    """
+    Return number of unique clusters, 
+    ignoring noise label (-1).
+    """
     return len(set(labels)) - (1 if -1 in labels else 0)
