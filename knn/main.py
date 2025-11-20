@@ -84,7 +84,6 @@ def main():
         label_encoder=label_encoder, 
         scaler=selected_scaler, 
         selected_features=selected_features,
-        X_raw=X_raw
     )
 
 def save_model(
@@ -92,7 +91,6 @@ def save_model(
     label_encoder: LabelEncoder,
     scaler: StandardScaler,
     selected_features: List[str],
-    X_raw: pd.DataFrame
 ) -> None:
     path = './model'
     # Save trained model and label encoder
@@ -101,16 +99,6 @@ def save_model(
     joblib.dump(scaler, f"{path}/scaler.pkl")
     joblib.dump(selected_features, f"{path}/selected_features.pkl")
 
-    # Min/Max +- 5% ranges for UI sliders
-    feature_ranges = {
-        feature: {
-            "min": float(X_raw[feature].min() - 0.05 * X_raw[feature].min()),
-            "max": float(X_raw[feature].max() + 0.05 * X_raw[feature].max())
-        }
-        for feature in selected_features
-    }
-
-    joblib.dump(feature_ranges, f"{path}/feature_ranges.pkl")
     print("Model and label encoder saved.")
 
 if __name__ == "__main__":
