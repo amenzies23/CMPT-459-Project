@@ -149,9 +149,9 @@ def _(GaussianMixture, X, davies_bouldin_score, np, silhouette_score):
 def _(mo):
     mo.md(
         r"""
-    ## Visualization of the BIC and Silhouette Scores
+    ## Visualization of the Davies Bouldin and Silhouette Scores
 
-    Below we can see the visualization of the scores we got for each k value. For BIC, a smaller value is better, and for Silhouette a higher score is better
+    Below we can see the visualization of the scores we got for each k value. For Davies Bouldin, a smaller value is better, and for Silhouette a higher score is better
     """
     )
     return
