@@ -6,6 +6,10 @@ from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_sc
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+from sklearn.metrics import RocCurveDisplay
+
 # KNN without hyperameter tuning.
 def classify_with_knn_without_hyperparameter(
     X: np.ndarray, 
@@ -75,6 +79,10 @@ def classify_with_knn(
     print("[Classification] Best Params:", grid.best_params_)
 
     y_pred = best_knn.predict(X_test)
+    
+    # Plot ROC curve
+    plot_roc_curve(best_knn, X_test, y_test, label_encoder)
+
     print("[Classification Report]")
     print(classification_report(y_test, y_pred, target_names=label_encoder.classes_))
 
@@ -98,3 +106,30 @@ def classify_with_knn(
     print("[Cross-validation Accuracy]:", round(cv_acc, 4))
 
     return best_knn
+
+# Plot ROC Curve
+def plot_roc_curve(knn, X_test, y_test, label_encoder):
+    # Binarize labels for multiclass ROC (one-vs-rest)
+    classes = np.unique(y_test)
+    y_test_bin = label_binarize(y_test, classes=classes)
+    
+    # Predict probabilities (KNN must use predict_proba)
+    y_score = knn.predict_proba(X_test)
+
+    plt.figure(figsize=(8, 6))
+    
+    for i, class_label in enumerate(classes):
+        fpr, tpr, _ = roc_curve(y_test_bin[:, i], y_score[:, i])
+        roc_auc = auc(fpr, tpr)
+        plt.plot(fpr, tpr, lw=2, label=f"Class {label_encoder.classes_[i]} (AUC = {roc_auc:.2f})")
+
+    # Random-guess line
+    plt.plot([0, 1], [0, 1], "k--", lw=1)
+
+    plt.title("ROC Curve (One-vs-Rest)")
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.legend()
+    plt.grid(alpha=0.3)
+    plt.savefig("./plots/roc_curve.png", dpi=300)
+    plt.show()
