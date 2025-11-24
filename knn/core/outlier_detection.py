@@ -3,8 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import LocalOutlierFactor
 
-# The Local Outlier Factor (LOF) measures how isolated a point is compared to
-# its local neighbourhood.    
+# Identify and remove anomalous samples from a dataset using the Local Outlier Factor (LOF) algorithm. 
+# It takes a scaled feature matrix (X_scaled) and corresponding labels (y_encoded), 
+# detects outliers based on how isolated each sample is compared to its local neighborhood, 
+# and returns a cleaned dataset with outliers removed.
+# After detecting outliers: 
+# - Filters out all samples labeled as outliers
+# - Returns the cleaned feature matrix and labels
+# - Visualizes inliers and outliers using the first two features
 def remove_outliers(
     X_scaled: np.ndarray, 
     y_encoded: np.ndarray, 
