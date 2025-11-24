@@ -8,7 +8,6 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 from sklearn.metrics import roc_curve, auc
 from sklearn.preprocessing import label_binarize
-from sklearn.metrics import RocCurveDisplay
 
 # KNN without hyperameter tuning.
 def classify_with_knn_without_hyperparameter(
