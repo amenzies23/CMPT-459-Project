@@ -18,7 +18,6 @@ with app.setup:
     import matplotlib.pyplot as plt
 
 
-
 @app.cell(hide_code=True)
 def _():
     mo.md("""# Load and Extract Features from Dataset""")
@@ -27,8 +26,8 @@ def _():
 
 @app.cell
 def _():
-    df = pd.read_csv("data/plant_health_data.csv")
-    X = df.pipe(preprocess).pipe(feature_extraction, components = 18)
+    df = pd.read_csv("data/train_data.csv",index_col=0)
+    X = df.pipe(preprocess,attr= [])
     X
     return X, df
 
@@ -87,19 +86,28 @@ def _(X, search, y):
     return
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(search):
-    mo.md(f"""*Best score for SVM is {search.best_score_:.2f}*""")
+    mo.md(f"""*Best training score for SVM is {search.best_score_:.2f}*""")
     return
 
 
+@app.cell
+def _():
+    test = pd.read_csv("data/test_data.csv",index_col=0)
+    X_test = test.pipe(preprocess, attr = [])
+    y_test = test.pipe(get_labels)
+
+    return X_test, y_test
+
+
 @app.cell(column=2)
-def _(X, search, y):
+def _(X_test, search, y_test):
     optimal = search.best_estimator_
-    y_score = optimal.predict_proba(X)
+    y_score = optimal.predict_proba(X_test)
     y_pred = y_score.argmax(axis = 1)
     cm = confusion_matrix(
-        y['Plant_Health_Status'].astype('category').cat.codes,
+        y_test['Plant_Health_Status'].astype('category').cat.codes,
         y_pred
     )
     return cm, y_pred, y_score
@@ -134,10 +142,10 @@ def _():
 
 
 @app.cell
-def _(y):
+def _(y_test):
     o = OneHotEncoder(sparse_output=False)
-    y_classes = o.fit_transform(y)
-    y_classes
+    y_classes = o.fit_transform(y_test)
+
     return o, y_classes
 
 
@@ -173,27 +181,27 @@ def _(o, y_classes, y_score):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
-        # Recall Precision and F1
-    """)
+    mo.md(f"""# Recall Precision and F1""")
     return
 
 
 @app.cell
-def _(y, y_pred):
-    precision = precision_score(y_pred,y['Plant_Health_Status'].astype('category').cat.codes,average='micro')
-    recall = recall_score(y_pred,y['Plant_Health_Status'].astype('category').cat.codes,average='micro')
-    f1 = f1_score(y_pred,y['Plant_Health_Status'].astype('category').cat.codes,average='micro')
+def _(y_pred, y_test):
+    precision = precision_score(y_pred,y_test['Plant_Health_Status'].astype('category').cat.codes,average='micro')
+    recall = recall_score(y_pred,y_test['Plant_Health_Status'].astype('category').cat.codes,average='micro')
+    f1 = f1_score(y_pred,y_test['Plant_Health_Status'].astype('category').cat.codes,average='micro')
     return f1, precision, recall
 
 
 @app.cell
 def _(f1, precision, recall):
-    mo.md(f"""
-    Average Precision: {precision}\n
-    Average Recall: {recall}\n
-    Average F1: {f1}
-          """)
+    mo.md(
+        f"""
+    Average Precision: {precision:.2f}\n
+    Average Recall: {recall:.2f}\n
+    Average F1: {f1:.2f}
+    """
+    )
     return
 
 
