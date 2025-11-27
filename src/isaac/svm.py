@@ -225,6 +225,7 @@ def svm_train(X,y):
         scoring='accuracy',
         n_jobs=1
     )
+    search.fit(X,y.values.flatten())
     optimal = search.best_estimator_
     y_score = optimal.predict_proba(X)
     y_pred = y_score.argmax(axis = 1)

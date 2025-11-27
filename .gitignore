@@ -3,3 +3,4 @@
 *.egg*
 *.pyc
 *__*
+*.ipynb_checkpoints*
