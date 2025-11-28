@@ -13,22 +13,27 @@ from sklearn.preprocessing import label_binarize
 def classify_with_knn_without_hyperparameter(
     X: np.ndarray, 
     y: np.ndarray, 
-    label_encoder: LabelEncoder
+    label_encoder: LabelEncoder,
+    X_test=None,
+    y_test=None
 ) -> KNeighborsClassifier:
     # Split dataset
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, stratify=y
     )
 
-    # Initialize default KNN classifier (baseline)
+    # Initialize default KNN classifier
     knn = KNeighborsClassifier(n_neighbors=5, weights='uniform')
     knn.fit(X_train, y_train)
 
     # Predictions
     y_pred = knn.predict(X_test)
 
+    # Plot ROC curve
+    plot_roc_curve(knn, X_test, y_test, label_encoder)
+
     # Classification report
-    print("\n[Baseline KNN Classification Report]")
+    print("[KNN Classification Report]")
     print(classification_report(y_test, y_pred, target_names=label_encoder.classes_))
 
     # Confusion matrix
@@ -38,7 +43,7 @@ def classify_with_knn_without_hyperparameter(
         xticklabels=label_encoder.classes_,
         yticklabels=label_encoder.classes_
     )
-    plt.title("Baseline KNN - Confusion Matrix")
+    plt.title("Confusion Matrix")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
     plt.savefig("./plots/classification_confusion_matrix.png", dpi=300)
@@ -57,11 +62,11 @@ def classify_with_knn_without_hyperparameter(
 def classify_with_knn(
     X: np.ndarray, 
     y: np.ndarray, 
-    label_encoder: LabelEncoder
+    label_encoder: LabelEncoder,
+    X_test=None,
+    y_test=None
 ) -> KNeighborsClassifier:
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, stratify=y
-    )
+    X_train, y_train = X, y
 
     knn = KNeighborsClassifier()
     param_grid = {
