@@ -35,7 +35,6 @@ knn = joblib.load(os.path.join(MODEL_DIR, "knn_model.pkl"))
 scaler = joblib.load(os.path.join(MODEL_DIR, "scaler.pkl"))
 label_encoder = joblib.load(os.path.join(MODEL_DIR, "label_encoder.pkl"))
 selected_features = joblib.load(os.path.join(MODEL_DIR, "selected_features.pkl"))
-feature_ranges = joblib.load(os.path.join(MODEL_DIR, "feature_ranges.pkl"))
 
 def build_interpolators_for_plant(plant_id):
     """Build interpolation functions only for the selected plant (raw data)."""
@@ -69,8 +68,7 @@ def build_interpolators_for_plant(plant_id):
 def index():
     return render_template(
         "index.html",
-        features=list(selected_features),
-        ranges=feature_ranges
+        features=list(selected_features)
     )
 
 @app.route("/predict", methods=["POST"])
