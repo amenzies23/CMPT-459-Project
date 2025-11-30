@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.16.5"
+__generated_with = "0.17.7"
 app = marimo.App(width="columns")
 
 with app.setup:
@@ -20,28 +20,32 @@ with app.setup:
 
 @app.cell(hide_code=True)
 def _():
-    mo.md("""# Load and Extract Features from Dataset""")
+    mo.md("""
+    # Load and Extract Features from Dataset
+    """)
     return
 
 
 @app.cell
 def _():
-    df = pd.read_csv("data/train_data.csv",index_col=0)
-    X = df.pipe(preprocess,attr= [])
-    X
-    return X, df
+    df = pd.read_csv("data/plant_health_data.csv")
+    cleaned = df.pipe(preprocess,attr= [])
+    X= cleaned.iloc[:900,:]
+    return X, cleaned, df
 
 
 @app.cell
 def _(df):
-    y = get_labels(df)
-    y
-    return (y,)
+    cleaned_y = get_labels(df)
+    y = cleaned_y.iloc[:900,:]
+    return cleaned_y, y
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md("""# Create Model""")
+    mo.md("""
+    # Create Model
+    """)
     return
 
 
@@ -54,7 +58,9 @@ def _():
 
 @app.cell(column=1, hide_code=True)
 def _():
-    mo.md("""# Hyper-Parameter Optimization""")
+    mo.md("""
+    # Hyper-Parameter Optimization
+    """)
     return
 
 
@@ -88,15 +94,19 @@ def _(X, search, y):
 
 @app.cell
 def _(search):
-    mo.md(f"""*Best training score for SVM is {search.best_score_:.2f}*""")
+    mo.md(f"""
+    *Best training score for SVM is {search.best_score_:.2f}*
+    """)
     return
 
 
 @app.cell
-def _():
+def _(cleaned, cleaned_y):
     test = pd.read_csv("data/test_data.csv",index_col=0)
     X_test = test.pipe(preprocess, attr = [])
     y_test = test.pipe(get_labels)
+    X_test = cleaned.iloc[900:,:]
+    y_test = cleaned_y.iloc[900:,:]
 
     return X_test, y_test
 
@@ -115,12 +125,10 @@ def _(X_test, search, y_test):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(
-        f"""
+    mo.md(f"""
     # SVM Performance
     SVM struggled to differentiate the level of stress of plants rather than the binary case of whether a plant was stressed or not
-    """
-    )
+    """)
     return
 
 
@@ -145,19 +153,16 @@ def _():
 def _(y_test):
     o = OneHotEncoder(sparse_output=False)
     y_classes = o.fit_transform(y_test)
-
     return o, y_classes
 
 
 @app.cell(column=3, hide_code=True)
 def _():
-    mo.md(
-        f"""
+    mo.md(f"""
     # ROC Curves Per-Class
-    Both the Healthy and High Stress Classes Have been predicted well while the 
+    Both the Healthy and High Stress Classes Have been predicted well while the
     Moderate Stress class has significantly lower performance overall
-    """
-    )
+    """)
     return
 
 
@@ -181,7 +186,9 @@ def _(o, y_classes, y_score):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""# Recall Precision and F1""")
+    mo.md(f"""
+    # Recall Precision and F1
+    """)
     return
 
 
@@ -195,13 +202,11 @@ def _(y_pred, y_test):
 
 @app.cell
 def _(f1, precision, recall):
-    mo.md(
-        f"""
+    mo.md(f"""
     Average Precision: {precision:.2f}\n
     Average Recall: {recall:.2f}\n
     Average F1: {f1:.2f}
-    """
-    )
+    """)
     return
 
 
