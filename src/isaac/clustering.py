@@ -1,6 +1,6 @@
 import marimo
 
-__generated_with = "0.17.8"
+__generated_with = "0.16.5"
 app = marimo.App(width="columns")
 
 with app.setup:
@@ -20,14 +20,16 @@ with app.setup:
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
+    mo.md(
+        f"""
     # Plot Hierarchical Clustering of Dataset
     * Load Data
     * Preprocess and Apply Wavelet transform
     * Compute Distance Matrix
     * Visualize Distance matrix clusterplot
     * Show visualization of 2D point with highest cluster score
-    """)
+    """
+    )
     return
 
 
@@ -36,49 +38,42 @@ def _():
     df = pd.read_csv("data/plant_health_data.csv")
     cleaned = preprocess(df,attr=[])
     cleaned
-    return cleaned, df
+    return (cleaned,)
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
+    mo.md(
+        f"""
     ## Feature Extraction
     We extract extra features using wavelets.  However, the wavelets introduce redundancy therefore we perform PCA to reduce correlation between features.
-    """)
+    """
+    )
     return
 
 
 @app.cell
 def _(cleaned):
-    X = feature_extraction(cleaned,components=10)
+    X = cleaned
     X
     return (X,)
 
 
-@app.cell
-def _(X, df):
-    points = X.copy()
-    points['y'] = get_labels(df)
-    sns.scatterplot(points, x='PC0',y='PC1', hue= 'y')
-    plt.legend(bbox_to_anchor = (0.95,1.1), ncols = 4,frameon = False)
-    return (points,)
-
-
 @app.cell(column=1, hide_code=True)
 def _():
-    mo.md(f"""
+    mo.md(
+        f"""
     # Agglomerative Clustering
     There does seem to be some block structure to our dataset and features.  Now we show the distances with
     clustering. We show single link, ward, and average clustering results
-    """)
+    """
+    )
     return
 
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
-    ### Single Linkage
-    """)
+    mo.md(f"""### Single Linkage""")
     return
 
 
@@ -91,9 +86,7 @@ def _(X):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
-    ### Average Linkage
-    """)
+    mo.md(f"""### Average Linkage""")
     return
 
 
@@ -106,9 +99,7 @@ def _(X):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
-    ### Complete/Farthest Linkage
-    """)
+    mo.md(f"""### Complete/Farthest Linkage""")
     return
 
 
@@ -137,9 +128,7 @@ def _(d_mat):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md("""
-    ### Single Link Dendogram
-    """)
+    mo.md("""### Single Link Dendogram""")
     return
 
 
@@ -154,9 +143,7 @@ def _(single):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md("""
-    ### Average Link Dendogram
-    """)
+    mo.md("""### Average Link Dendogram""")
     return
 
 
@@ -171,9 +158,7 @@ def _(average):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md("""
-    ### Complete Link Dendogram
-    """)
+    mo.md("""### Complete Link Dendogram""")
     return
 
 
@@ -188,17 +173,13 @@ def _(complete):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
-    Of the three methods, the worst looking dendogram is single.  Most clusters are formed near the leaves of the tree, implying small clusters.  Complete and average linkage were able to find much larger clusters. This implies better performance.
-    """)
+    mo.md(r"""Of the three methods, the worst looking dendogram is single.  Most clusters are formed near the leaves of the tree, implying small clusters.  Complete and average linkage were able to find much larger clusters. This implies better performance.""")
     return
 
 
 @app.cell(column=3, hide_code=True)
 def _():
-    mo.md("""
-    ### Average Linkage
-    """)
+    mo.md("""### Average Linkage""")
     return
 
 
@@ -213,9 +194,7 @@ def _(average, d_mat):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(f"""
-    ### Complete Linkage
-    """)
+    mo.md(f"""### Complete Linkage""")
     return
 
 
@@ -230,9 +209,7 @@ def _(complete, d_mat):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
-    Neither method produces strong block structures.  Suggesting there aren't sub regions of the distance matrix that are more similar.  The complete method creates slightly strong structure.  Therefore, I'll use that method to compute the best flat clustering
-    """)
+    mo.md(r"""Neither method produces strong block structures.  Suggesting there aren't sub regions of the distance matrix that are more similar.  The complete method creates slightly strong structure.  Therefore, I'll use that method to compute the best flat clustering""")
     return
 
 
@@ -259,9 +236,7 @@ def _(scores):
 
 @app.cell(hide_code=True)
 def _():
-    mo.md(r"""
-    Clusterings from 2-5 get worse and worse. However, there is a peak at 10.  Since low number of clusters are less interesting we chose 10 as the number of clusters.
-    """)
+    mo.md(r"""Clusterings from 2-5 get worse and worse. However, there is a peak at 10.  Since low number of clusters are less interesting we chose 10 as the number of clusters.""")
     return
 
 

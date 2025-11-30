@@ -1,6 +1,8 @@
 *data*
 *venv*
 *.pyc
+*__*
+*.ipynb_checkpoints*
 .DS_Store
 
 # KNN
