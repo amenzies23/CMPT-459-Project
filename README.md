@@ -1,6 +1,5 @@
 # CMPT-459-Project
 
-<<<<<<< HEAD
 # Installation
 
 ## Create and activate a virtual environment
@@ -14,9 +13,7 @@ For KNN Classification
 pip instal -r aki_requirements.txt
 ```
 
-=======
 # Layout
->>>>>>> main
 ```
 ├── data
 ├── eda
@@ -26,11 +23,10 @@ pip instal -r aki_requirements.txt
 ├── src
 ```
 
-<<<<<<< HEAD
 ### K-Nearest Neighbour (KNN) Classifier
 Make sure you are in the correct directory:
 ```bash
-cd ./knn
+cd src/aki
 ```
 
 With Hyperparameter Tuning (default)
@@ -90,7 +86,6 @@ To retrain the model with hyperparameter tuning and start the Flask app immediat
 TODO: Revise as we work on the project.
 TODO: Dataset, Preprocessing, Feature Extraction, Classifcation, etc..
 ...
-=======
 # Installation
 We designed our Project as a python package. All our training 
 and pre-processing code is in the ```src/``` directory.
@@ -121,4 +116,3 @@ print(model_ready.head())
 * Wavelet Transform
 
 # Models
->>>>>>> main
