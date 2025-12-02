@@ -1,29 +1,60 @@
 # CMPT-459-Project
+# Overview
+Maybe we add a quick 1-2 sentences about the project? Maybe we take directly from the pitch for this
 
 # Installation
 
 ## Create and activate a virtual environment
+```
 python3 -m venv venv
 source venv/bin/activate   # On macOS/Linux
 venv\Scripts\activate      # On Windows
+```
+We designed our Project as a python package. All our training 
+and pre-processing code is in the ```src/``` directory.
+To install the project and get running. Run 
 
+```
+pip install -e .
+```
+
+# Basic Usage
+In any python file you can now use
+```python
+from preprocessing import preprocess
+import pandas as pd
+df = pd.read_csv("data/plant_healt_data.csv")
+model_ready = preprocess(df)
+print(model_ready.head())
+
+```
+# Project Structure
+```text
+├── data/                         # Pre-split datasets
+├── eda/                          # Exploratory data analysis notebooks
+├── src/                          # Python source code
+│   ├── alex/                     # Alex's models
+│   ├── aki/                      # Aki's models 
+│   ├── isaac/                    # Isaac's models
+│   ├── extraction.py             # Shared feature-extraction utilities
+│   └── preprocessing.py          # Shared preprocessing utilities
+├── submission/                   # Final notebooks for grading
+│   ├── classification/
+│   ├── clustering/
+│   ├── feature_selection/
+│   └── outlier-detection/
+├── README.md
+├── requirements.txt              # Python dependencies
+└── setup.py                      # Package setup (for training / installs)
+```
 ## Install Dependencies
 For KNN Classification
 ```
 pip instal -r aki_requirements.txt
 ```
 
-# Layout
-```
-├── data
-├── eda
-├── README.md
-├── requirements.txt
-├── setup.py
-├── src
-```
 
-### K-Nearest Neighbour (KNN) Classifier
+## K-Nearest Neighbour (KNN) Classifier
 Make sure you are in the correct directory:
 ```bash
 cd src/aki
@@ -87,23 +118,7 @@ TODO: Revise as we work on the project.
 TODO: Dataset, Preprocessing, Feature Extraction, Classifcation, etc..
 ...
 # Installation
-We designed our Project as a python package. All our training 
-and pre-processing code is in the ```src/``` directory.
-To install the project and get running. Run 
 
-```
-pip install -e .
-```
-
-# Basic Usage
-In any python file you can now use
-```python
-from preprocessing import preprocess
-import pandas as pd
-df = pd.read_csv("data/plant_healt_data.csv")
-model_ready = preprocess(df)
-print(model_ready.head())
-```
 
 # Dataset
 * link to project proposal
