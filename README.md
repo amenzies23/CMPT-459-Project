@@ -1,9 +1,8 @@
 # CMPT-459-Project
 # Overview
-Maybe we add a quick 1-2 sentences about the project? Maybe we take directly from the pitch for this
+This project uses machine learning, data analysis, and a custom classifier to predict the stress level of the plant. Our trained models can give automated warnings when a plant is likely experiencing stress. This is valuable because gardeners often notice issues too late, which can lead to smaller harvests or even plant loss. The data can be collected with affordable equipment such as soil probes, light sensors, and temperature monitors. Also, we can analyze this data to discover patterns and relationships, such as how soil quality, water levels, and other features affect growth and plant stress. In the future, the trained models could run on IoT devices for real-time monitoring. This would result in a smart garden assistant that supports healthier plants, reduces waste, and promotes sustainable living.
 
 # Installation
-
 ## Create and activate a virtual environment
 ```
 python3 -m venv venv
@@ -42,9 +41,6 @@ We split up the final submission notebooks into 3 folders, one for each main tas
 - Inside `submission/classification`, you will find notebooks for our `KNN`, `SVM`, and `Random Forest` classifiers.
 - Inside `submissions/clustering`, you will find notebooks for our `DBSCAN`, `EM`, and `Hierarchical` clustering algorithms.
 - Inside `submissions/outlier-detection`, you will find notebooks for our `Kernel Density`, `Local Outlier Factor`, and `Isolation Forest` outlier detection algorithms.
-
-## Running Individual Files
-** Maybe we break down how to run the files in each of our individual directories? If we think it is necessary
 
 ## K-Nearest Neighbour (K-NN) Inference
 1.) Make sure to check out the correct branch.
