@@ -1,6 +1,9 @@
-# CMPT-459-Project
+# SFU CMPT 459, Data Mining | Plant Health Classification
+
 # Overview
 This project uses machine learning, data analysis, and a custom classifier to predict the stress level of the plant. Our trained models can give automated warnings when a plant is likely experiencing stress. This is valuable because gardeners often notice issues too late, which can lead to smaller harvests or even plant loss. The data can be collected with affordable equipment such as soil probes, light sensors, and temperature monitors. Also, we can analyze this data to discover patterns and relationships, such as how soil quality, water levels, and other features affect growth and plant stress. In the future, the trained models could run on IoT devices for real-time monitoring. This would result in a smart garden assistant that supports healthier plants, reduces waste, and promotes sustainable living.
+
+Dataset: https://www.kaggle.com/datasets/ziya07/plant-health-data
 
 # Installation
 ## Create and activate a virtual environment
