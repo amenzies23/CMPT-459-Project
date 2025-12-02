@@ -7,6 +7,10 @@
 knn/model/*
 knn/plots/*
 
+# Do not ignore the 'model' directory itself
+!knn/model/
+!knn/plots/
+
 # Source: https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
