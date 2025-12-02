@@ -10,22 +10,11 @@ python3 -m venv venv
 source venv/bin/activate   # On macOS/Linux
 venv\Scripts\activate      # On Windows
 ```
-We designed our Project as a python package. All our training 
-and pre-processing code is in the ```src/``` directory.
-To install the project and get running. Run 
 
+## Install the project
 ```
 pip install -e .
 ```
-
-# Basic Usage
-In any python file you can now use
-```python
-from preprocessing import preprocess
-import pandas as pd
-df = pd.read_csv("data/plant_healt_data.csv")
-model_ready = preprocess(df)
-print(model_ready.head())
 
 ```
 # Project Structure
@@ -50,92 +39,28 @@ print(model_ready.head())
 
 # Final Submission Notebooks
 We split up the final submission notebooks into 3 folders, one for each main task we performed. 
-
 - Inside `submission/classification`, you will find notebooks for our `KNN`, `SVM`, and `Random Forest` classifiers.
 - Inside `submissions/clustering`, you will find notebooks for our `DBSCAN`, `EM`, and `Hierarchical` clustering algorithms.
-- Inside `submissions/outlier-detection`, you will find notebooks for our `Kernel Density`, `Local Outlier`, and `Isolation Forest` outlier detection algorithms.
+- Inside `submissions/outlier-detection`, you will find notebooks for our `Kernel Density`, `Local Outlier Factor`, and `Isolation Forest` outlier detection algorithms.
 
 ## Running Individual Files
 ** Maybe we break down how to run the files in each of our individual directories? If we think it is necessary
-For KNN Classification
-```
-pip instal -r aki_requirements.txt
-```
 
-## K-Nearest Neighbour (KNN) Classifier
-Make sure you are in the correct directory:
-```bash
-cd src/aki
+## K-Nearest Neighbour (K-NN) Inference
+1.) Make sure to check out the correct branch.
+```
+git checkout knn-inference
 ```
 
-With Hyperparameter Tuning (default)
-```bash
-python main.py
+2.) Train the model by running the notebook in `./knn/train.ipynb`.
+
+3.) Start a simple web app for inference:
+```
+source venv/bin/activate
+cd ./knn && ./inference.sh
 ```
 
-Without Hyperparameter Tuning
-```bash
-python main.py --no-hyperparameter-tuning
-```
-
-During training, the script:
-- Generates PCA and clustering visualizations
-- Selects optimal features
-- Saves the trained k-NN model, scaler, and label encoder under `./model/`
-
-### Inference via Web App
-After training completes:
-```bash
-python app/app.py
-```
-Then open your browser and visit: http://localhost:5000
-Use the interactive sliders to change feature values and see predicted class labels.
-
-### Clean Cache and Generated Files (Cleanup)
-Run this to remove:
-- Python cache files (__pycache__, .pkl, .png, etc.)
-- Generated plots and model files
-```bash
-./clean.sh
-```
-
-### Train + Run Inference (one step)
-To retrain the model with hyperparameter tuning and start the Flask app immediately:
-```bash
-./run.sh
-```
-
-### KNN Structure
-.
-├── app/
-│   ├── app.py                # Flask web app for inference
-│   └── templates/            # HTML templates
-├── core/
-│   ├── preprocessing.py
-│   ├── outlier_detection.py
-│   ├── feature_selection.py
-│   ├── clustering.py
-│   └── classification.py
-├── model/                    # Saved model, scaler, encoder
-├── main.py                   # Main training + visualization script
-|── utils.py
-├── clean.sh                  # Cleanup script
-└── run.sh                    # Train + inference launcher
-
-TODO: Revise as we work on the project.
-TODO: Dataset, Preprocessing, Feature Extraction, Classifcation, etc..
-...
-# Installation
-
-
-# Dataset
-* link to project proposal
-
-# Preprocessing
-* What we do
-* Why
-
-# Feature Extraction
-* Wavelet Transform
-
-# Models
+4.) Open your browser and visit: http://localhost:5000
+On the web app, you can select 10 different plants that were originally from the dataset.
+We built a cubic spline interpolator for each plant (inspired by SFU MACM 316 interpolation) to generate samples for demonstration purposes.
+Then, you can hover over the plot, and an inference will run given the 8 selected parameters and would classify whether or not the selected plant with certain attributes is considered `Healthy`, `Moderately Stress`, or `High Stress`.
