@@ -38,7 +38,7 @@ def remove_outliers(
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.legend()
-    plt.savefig("./plots/remove_outliers.png", dpi=300)
+    # plt.savefig("./plots/remove_outliers.png", dpi=300)
     plt.show()
     
     removed = np.sum(outlier_labels == -1)

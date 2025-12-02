@@ -17,7 +17,7 @@ def visualize_ground_truth(X, y, label_encoder):
         palette="viridis", s=60
     )
     plt.title("Ground Truth: Plant Health Status")
-    plt.savefig("./plots/visualize_ground_truth.png", dpi=300)
+    # plt.savefig("./plots/visualize_ground_truth.png", dpi=300)
     plt.show()
     
 # For visualize purpose only.
@@ -49,6 +49,6 @@ def visualize_knn_decision_boundary(X, y, n_neighbors=5):
     plt.title(f"k-NN decision regions (k={n_neighbors})")
     plt.xlabel("PCA 1")
     plt.ylabel("PCA 2")
-    plt.savefig("./plots/visualize_knn_decision_boundary.png", dpi=300)
+    # plt.savefig("./plots/visualize_knn_decision_boundary.png", dpi=300)
     plt.show()
     

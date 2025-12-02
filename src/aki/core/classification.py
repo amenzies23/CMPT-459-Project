@@ -46,7 +46,7 @@ def classify_with_knn_without_hyperparameter(
     plt.title("Confusion Matrix")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
-    plt.savefig("./plots/classification_confusion_matrix.png", dpi=300)
+    # plt.savefig("./plots/classification_confusion_matrix.png", dpi=300)
     plt.show()
     
     # Cross-validation accuracy
@@ -100,7 +100,7 @@ def classify_with_knn(
     plt.title("Confusion Matrix")
     plt.xlabel("Predicted")
     plt.ylabel("Actual")
-    plt.savefig("./plots/classification_confusion_matrix.png", dpi=300)
+    # plt.savefig("./plots/classification_confusion_matrix.png", dpi=300)
     plt.show()
     
     # Cross-validation accuracy
@@ -135,5 +135,5 @@ def plot_roc_curve(knn, X_test, y_test, label_encoder):
     plt.ylabel("True Positive Rate")
     plt.legend()
     plt.grid(alpha=0.3)
-    plt.savefig("./plots/roc_curve.png", dpi=300)
+    # plt.savefig("./plots/roc_curve.png", dpi=300)
     plt.show()

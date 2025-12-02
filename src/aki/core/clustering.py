@@ -108,7 +108,7 @@ def perform_clustering(
         hue=cluster_labels, palette="tab10", s=50
     )
     plt.title(f"DBSCAN Clustering (eps={eps}, min_samples={min_samples})")
-    plt.savefig("./plots/perform_clustering.png", dpi=300)
+    # plt.savefig("./plots/perform_clustering.png", dpi=300)
     plt.show()
 
 def plot_dbscan_param_scatter(results, out_path="./plots/dbscan_param_scatter.png"):
@@ -145,7 +145,7 @@ def plot_dbscan_param_scatter(results, out_path="./plots/dbscan_param_scatter.pn
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig(out_path, dpi=300)
+    # plt.savefig(out_path, dpi=300)
     plt.show()
 
 def count_clusters(labels):
