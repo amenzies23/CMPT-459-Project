@@ -4,8 +4,8 @@
 .DS_Store
 
 # KNN
-knn/model/*
-knn/plots/*
+knn/model/*.pkl
+knn/plots/*.png
 
 # Do not ignore the 'model' directory itself
 !knn/model/
