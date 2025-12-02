@@ -6,8 +6,8 @@
 .DS_Store
 
 # KNN
-knn/model/*
-knn/plots/*
+src/aki/model/*
+src/aki/plots/*
 
 # Source: https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files
