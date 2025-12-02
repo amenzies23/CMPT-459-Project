@@ -47,12 +47,20 @@ print(model_ready.head())
 ├── requirements.txt              # Python dependencies
 └── setup.py                      # Package setup (for training / installs)
 ```
-## Install Dependencies
+
+# Final Submission Notebooks
+We split up the final submission notebooks into 3 folders, one for each main task we performed. 
+
+- Inside `submission/classification`, you will find notebooks for our `KNN`, `SVM`, and `Random Forest` classifiers.
+- Inside `submissions/clustering`, you will find notebooks for our `DBSCAN`, `EM`, and `Hierarchical` clustering algorithms.
+- Inside `submissions/outlier-detection`, you will find notebooks for our `Kernel Density`, `Local Outlier`, and `Isolation Forest` outlier detection algorithms.
+
+## Running Individual Files
+** Maybe we break down how to run the files in each of our individual directories? If we think it is necessary
 For KNN Classification
 ```
 pip instal -r aki_requirements.txt
 ```
-
 
 ## K-Nearest Neighbour (KNN) Classifier
 Make sure you are in the correct directory:
