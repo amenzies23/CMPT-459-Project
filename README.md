@@ -18,7 +18,6 @@ venv\Scripts\activate      # On Windows
 pip install -e .
 ```
 
-```
 # Project Structure
 ```text
 ├── data/                         # Pre-split datasets
